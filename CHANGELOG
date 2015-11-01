@@ -1,0 +1,49 @@
+Changelog for octentcontrol backend.
+
+VERSION 1.0.0 RC1
+* Cleaned up sources to put in CVS info.  
+
+* Removed all references to old product name and only reference new one.
+
+* Increased wait time to 10 seconds from 4 between nessus instantiations.
+
+VERSION 1.0.0B10
+* Fixed a small bug that would cause addresses ending in 255 (range of
+  a class C) to send the backend into a neverending loop.
+
+* Added function to requeue any work that was in process by a scanning 
+  server that gets deactivated.
+
+
+VERSION 1.0.0B9
+* Reworked backend functionality to deactivate scanning threads on a 
+  scanning server.  Now functions correctly and has no static limitations.  
+  This includes having a linked list just for our threads (each scanning 
+  thread node has 2 ways it is linked.  One with ->next which refers to 
+  the cleanup queue, and one with ->tnext which refers to the thread queue).
+
+* Cleaned up much of the source.  
+
+* Added in licensing support (inserts into licensing table)
+
+* Fixed import.pl script that parses the nessus plugin dir and grabs 
+  pertinent info to be inserted into the plugins table.
+
+* Added in support for database connections over TCPIP sockets.
+
+* Created a Nessus Instantiation Mutex which allows us to stagger how often 
+  the nessus clients are started.  This makes the app MUCH more server 
+  friendly, and also reduces the chances a nessus client will fail due to 
+  resources not being available.
+
+* Fixed some of the debugging logging to more accurately describe what the 
+  code is doing.
+
+* Used pthread_cancel() instead of pthread_join() in the cleanup of our 
+  threads.  This forces scanning threads to be cleaned up immediately 
+  instead of waiting for it to synchronize with the calling thread.
+
+* Updated nessus.brw.sample (my sample config).  At some point we should 
+  create multiple configs and reference them in the db by file 
+  name/description.  
+
